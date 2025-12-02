@@ -24,7 +24,7 @@
 # Script Version and Variables
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-scriptVersion="3.5.0"
+scriptVersion="3.5.0-a4"
 scriptDate="2025/12/01"
 scriptBuild="3.5.0.251201502"
 scriptFunctionalName="App Auto-Patch"

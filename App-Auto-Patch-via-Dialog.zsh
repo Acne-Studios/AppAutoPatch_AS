@@ -399,7 +399,7 @@ set_display_strings_language() {
     display_string_deferral_infobox1="Deferral available until"
     display_string_deferral_infobox2="out of"
     display_string_deferral_infobox3="deferrals remaining\n"
-    display_string_deferral_message_01="You can **Install Now** to close the applications and apply the updates, or **Defer** to postpone them."
+    display_string_deferral_message_01="**Install Now** to close the applications and apply the updates, or **Defer** to postpone them."
     display_string_deferral_message_02="**application(s)**.\n\n"
     display_string_deferral_unlimited="No deadline date and unlimited deferrals\n"
     display_string_deferral_selecttitle="Defer updates for:"

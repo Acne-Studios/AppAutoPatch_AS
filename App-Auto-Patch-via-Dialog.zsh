@@ -396,7 +396,8 @@ set_display_strings_language() {
     #### Language for the Deferral Dialog with Deferrals
     display_string_deferral_button1="Defer"
     display_string_deferral_button2="Install Now"
-    display_string_deferral_infobox1="Deferral available until"
+    display_string_deferral_infobox1="**Deadline:**"
+    display_string_deferral_infobox_days_remaining="**Day(s) remaining:**"
     display_string_deferral_infobox2="out of"
     display_string_deferral_infobox3="deferrals remaining\n"
     display_string_deferral_message_01="**Install Now** to close the applications and apply the updates, or **Defer** to postpone them."
@@ -492,6 +493,8 @@ set_display_strings_language() {
             display_string_deferral_button2_managed=$(/usr/libexec/PlistBuddy -c "Print :userInterface:dialogElements:$elements:display_string_deferral_button2" "$appAutoPatchManagedPLIST.plist" 2>/dev/null)
             # local display_string_deferral_infobox1_managed
             display_string_deferral_infobox1_managed=$(/usr/libexec/PlistBuddy -c "Print :userInterface:dialogElements:$elements:display_string_deferral_infobox1" "$appAutoPatchManagedPLIST.plist" 2>/dev/null)
+            # local display_string_deferral_infobox_days_remaining_managed
+            display_string_deferral_infobox_days_remaining_managed=$(/usr/libexec/PlistBuddy -c "Print :userInterface:dialogElements:$elements:display_string_deferral_infobox_days_remaining" "$appAutoPatchManagedPLIST.plist" 2>/dev/null)
             # local display_string_deferral_infobox2_managed
             display_string_deferral_infobox2_managed=$(/usr/libexec/PlistBuddy -c "Print :userInterface:dialogElements:$elements:display_string_deferral_infobox2" "$appAutoPatchManagedPLIST.plist" 2>/dev/null)
             # local display_string_deferral_infobox3_managed
@@ -578,6 +581,7 @@ set_display_strings_language() {
     [[ -n "${display_string_deferral_button1_managed}" ]] && display_string_deferral_button1="${display_string_deferral_button1_managed}"
     [[ -n "${display_string_deferral_button2_managed}" ]] && display_string_deferral_button2="${display_string_deferral_button2_managed}"
     [[ -n "${display_string_deferral_infobox1_managed}" ]] && display_string_deferral_infobox1="${display_string_deferral_infobox1_managed}"
+    [[ -n "${display_string_deferral_infobox_days_remaining_managed}" ]] && display_string_deferral_infobox_days_remaining="${display_string_deferral_infobox_days_remaining_managed}"
     [[ -n "${display_string_deferral_infobox2_managed}" ]] && display_string_deferral_infobox2="${display_string_deferral_infobox2_managed}"
     [[ -n "${display_string_deferral_infobox3_managed}" ]] && display_string_deferral_infobox3="${display_string_deferral_infobox3_managed}"
     [[ -n "${display_string_deferral_message_01_managed}" ]] && display_string_deferral_message_01="${display_string_deferral_message_01_managed}"
@@ -627,6 +631,7 @@ set_display_strings_language() {
     log_verbose "display_string_deferral_button1: $display_string_deferral_button1"
     log_verbose "display_string_deferral_button2: $display_string_deferral_button2"
     log_verbose "display_string_deferral_infobox1: $display_string_deferral_infobox1"
+    log_verbose "display_string_deferral_infobox_days_remaining: $display_string_deferral_infobox_days_remaining"
     log_verbose "display_string_deferral_infobox2: $display_string_deferral_infobox2"
     log_verbose "display_string_deferral_infobox3: $display_string_deferral_infobox3"
     log_verbose "display_string_deferral_message_01: $display_string_deferral_message_01"
@@ -2971,6 +2976,7 @@ check_completion_status() {
 
 check_deadlines_days_date() {
     deadline_days_status="FALSE" # Deadline status modes: FALSE, SOFT, or HARD
+    deadline_days_remaining=""
     local current_epoch
     current_epoch=$(date +%s)
     workflow_zero_date_epoch=$(date -j -f "%Y-%m-%d" "${PatchingStartDate}" +"%s")
@@ -3047,6 +3053,13 @@ check_deadlines_days_date() {
     deadline_epoch="${deadline_days_epoch}"
     display_string_deadline="${display_string_deadline_days}"
     [[ "${verbose_mode_option}" == "TRUE" ]] && log_verbose "Verbose Mode: Function ${FUNCNAME[0]}: deadline_epoch is: ${deadline_epoch}"
+    if [[ -n "${deadline_epoch}" ]]; then
+        local deadline_seconds_remaining
+        deadline_seconds_remaining=$(( deadline_epoch - current_epoch ))
+        (( deadline_seconds_remaining < 0 )) && deadline_seconds_remaining=0
+        deadline_days_remaining=$(( ( deadline_seconds_remaining + 86399 ) / 86400 ))
+        [[ "${verbose_mode_option}" == "TRUE" ]] && log_verbose "Verbose Mode: Function ${FUNCNAME[0]}: deadline_days_remaining is: ${deadline_days_remaining}"
+    fi
     
     # If there is a ${deadline_epoch}, then make sure no user deferral timer or display timeout exceeds the deadline.
     if [[ -n "${deadline_epoch}" ]]; then
@@ -3585,7 +3598,7 @@ dialog_install_or_defer() {
     if [[ -n "${display_string_deadline}" ]] && [[ -n "${display_string_deadline_count}" ]]; then # Show both date and maximum deferral count deadlines.
         infobox="${display_string_deferral_infobox1} ${display_string_deadline}\n\n ${display_string_deadline_count} ${display_string_deferral_infobox2} ${display_string_deadline_count_maximum} ${display_string_deferral_infobox3}"
     elif [[ -n "${display_string_deadline}" ]]; then # Show only date deadline.
-        infobox="${display_string_deferral_infobox1} ${display_string_deadline}\n"
+        infobox="${display_string_deferral_infobox1} ${display_string_deadline}\n${display_string_deferral_infobox_days_remaining} ${deadline_days_remaining}\n"
     elif [[ -n "${display_string_deadline_count}" ]]; then # Show only maximum deferral count deadline.
         infobox="${display_string_deadline_count} ${display_string_deferral_infobox2} ${display_string_deadline_count_maximum} ${display_string_deferral_infobox3}"
     else # Show no deadlines.

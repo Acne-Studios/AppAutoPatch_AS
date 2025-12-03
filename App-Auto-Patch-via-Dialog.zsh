@@ -327,7 +327,7 @@ set_defaults() {
     modelName=$( /usr/libexec/PlistBuddy -c 'Print :0:_items:0:machine_name' /dev/stdin <<< "$(system_profiler -xml SPHardwareDataType)" )
     
     # Deadline date display format.
-    DISPLAY_STRING_FORMAT_DATE="%a %b %d" # Formatting options can be found in the man page for the date command.
+    DISPLAY_STRING_FORMAT_DATE="%a %b %-d" # Formatting options can be found in the man page for the date command.
     readonly DISPLAY_STRING_FORMAT_DATE
     
     # Deadline time display format.
@@ -386,7 +386,7 @@ set_display_strings_language() {
     display_string_and="and"
     display_string_days="days"
     display_string_times="times"
-    display_string_there_are="The following"
+    display_string_there_are="Updates are required for the following"
     
     #### Language for the App Discovery dialog
     display_string_discovery_message="Analyzing installed apps"
@@ -400,7 +400,7 @@ set_display_strings_language() {
     display_string_deferral_infobox2="out of"
     display_string_deferral_infobox3="deferrals remaining\n"
     display_string_deferral_message_01="You can **Install Now** to close the applications and apply the updates, or **Defer** to postpone them."
-    display_string_deferral_message_02="**application(s)** require updates.\n\n"
+    display_string_deferral_message_02="**application(s)**.\n\n"
     display_string_deferral_unlimited="No deadline date and unlimited deferrals\n"
     display_string_deferral_selecttitle="Defer updates for:"
     

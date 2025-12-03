@@ -24,9 +24,9 @@
 # Script Version and Variables
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-scriptVersion="3.5.0-a4"
-scriptDate="2025/12/01"
-scriptBuild="3.5.0.251201502"
+scriptVersion="3.5.0-a5"
+scriptDate="2025/12/03"
+scriptBuild="3.5.0.251201503"
 scriptFunctionalName="App Auto-Patch"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin
 autoload -Uz is-at-least
